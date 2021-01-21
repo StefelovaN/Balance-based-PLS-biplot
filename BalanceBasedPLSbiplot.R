@@ -12,22 +12,22 @@ MBdata = read.csv("MBdata.csv", sep=";")
 head(MBdata)
 n = nrow(MBdata)
 
-# Compositional explanatory variables (MB composition)
-MB = MBdata[, 1:5] # Choose the appropriate columns
+# compositional explanatory variables (MB composition)
+MB = MBdata[, 1:5] # Choose the appropriate columns.
 head(MB)
 sum(MB==0) # Are there any 0? If so, they need to be imputed.
 D = ncol(MB)
 cn = colnames(MB)
 
-# Additional real-valued covariates
-Real = MBdata[, 6:7] # Choose the appropriate columns
+# additional real-valued covariates
+Real = MBdata[, 6:7] # Choose the appropriate columns.
 head(Real)
 # Real = log(Real) # ?log-transformation
 p1 = ncol(Real)
 pn = colnames(Real)
 
 # Response variable
-Res = MBdata[, 8] # Choose the appropriate column
+Res = MBdata[, 8] # Choose the appropriate column.
 # Res = log(Res) # ?log-transformation
 
 
@@ -233,20 +233,15 @@ for(k in 1:kk){
   BE[k,] = tbeta
 }
 
-# mean and std. deviation of bootstrap regression coefficients
+# significance of bootstrap standardized regression coefficients
 beta = apply(BE, 2, mean)
 sdbeta = apply(BE, 2, sd)
-# 0.975-quantile of a standard normal distribution
 alpha1 = -qnorm(0.025)
-
-# bootstrap standardized regression coefficients
 a0 = beta/sdbeta
 a = c(a0, -a0[1:lB])
 names(a) = c(nB, pn, nB2)
-# bootstrap standardized regression coefficients (ordered)
 stdRCo = (a[order(-abs(a))])
 stdRCo
-# significant bootstrap standardized regression coefficients (ordered)
 stdRCos = stdRCo[abs(stdRCo)>alpha1]
 stdRCos
 
@@ -280,12 +275,12 @@ for (i in 2:lB){
   resst = mvr(y~cbind(Z, Xr), ncomp = comp, method = "kernel") 
   h = as.numeric(resst$loadings)[c(1, D+p1)]
   H[i,] = h
-  U = matrix(as.numeric(resst$scores), n, comp)[, 1:2]
-  if((sign(U[1,1])!=sign(G[1,1]))  & (sign(U[1,2])==sign(G[1,2]))){
+  U = as.numeric(resst$scores)[c(1, n+1)]
+  if((sign(U[1])!=sign(G[1,1]))  & (sign(U[2])==sign(G[1,2]))){
     H[i, 1] = -h[1]
-  }else if ((sign(U[1,1])==sign(G[1,1])) & (sign(U[1,2])!=sign(G[1,2]))){
+  }else if ((sign(U[1])==sign(G[1,1])) & (sign(U[2])!=sign(G[1,2]))){
     H[i, 2] = -h[2]
-  }else if ((sign(U[1,1])!=sign(G[1,1])) & (sign(U[1,2])!=sign(G[1,2]))){
+  }else if ((sign(U[1])!=sign(G[1,1])) & (sign(U[2])!=sign(G[1,2]))){
     H[i, ] = -h
   }
 }
@@ -310,7 +305,7 @@ g = ggplot(G, aes(x = Comp1, y = Comp2)) +
                colour = c("darkblue","grey","darkred")[factor(signary)]) +
   geom_text(data = H, aes(label = Variable, x = Comp1, y = Comp2, angle = Angle, hjust = Adj), 
             size = 5, colour = c("darkblue","grey","darkred")[factor(signary)]) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
   scale_color_gradient(name = "Response", low = "black", high = "gold") +
   xlab("PLS comp. 1") + ylab("PLS comp. 2") +
@@ -323,5 +318,5 @@ g = ggplot(G, aes(x = Comp1, y = Comp2)) +
         legend.title = element_text(size = 15, face = "bold"), 
         legend.text = element_text(size = 13),
         legend.key = element_blank())
-#g + coord_fixed(ratio = 1) # Change ratio between y-axis and x-axis scale?
+g + coord_fixed(ratio = 1) # Change ratio between y-axis and x-axis scale?
 dev.off()
