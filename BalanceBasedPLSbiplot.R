@@ -275,14 +275,6 @@ for (i in 2:lB){
   resst = mvr(y~cbind(Z, Xr), ncomp = comp, method = "kernel") 
   h = as.numeric(resst$loadings)[c(1, D+p1)]
   H[i,] = h
-  U = as.numeric(resst$scores)[c(1, n+1)]
-  if((sign(U[1])!=sign(G[1,1]))  & (sign(U[2])==sign(G[1,2]))){
-    H[i, 1] = -h[1]
-  }else if ((sign(U[1])==sign(G[1,1])) & (sign(U[2])!=sign(G[1,2]))){
-    H[i, 2] = -h[2]
-  }else if ((sign(U[1])!=sign(G[1,1])) & (sign(U[2])!=sign(G[1,2]))){
-    H[i, ] = -h
-  }
 }
 H = rbind(H, -H[1:lB,])
 H = 1*H # Scale loadings so that the arrows (points, respectively) are more visible in the biplot?
