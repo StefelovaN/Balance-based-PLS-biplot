@@ -297,7 +297,7 @@ H$Adj = (1-1.125*sign(H$Comp1))/2
 
 pdf("PLSbiplot.pdf", height = 9, width = 9)
 g = ggplot(G, aes(x = Comp1, y = Comp2)) +
-  geom_point(aes(colour = FM0), size = 2) +
+  geom_point(aes(colour = Res), size = 2) +
   geom_segment(data = H, aes(x = 0, y = 0, xend = Comp1, yend = Comp2),
                arrow = arrow(length = unit(1/2, "picas")), 
                colour = c("darkblue","grey","darkred")[factor(signary)]) +
