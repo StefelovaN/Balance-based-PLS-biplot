@@ -209,6 +209,9 @@ pls::R2(misclass, estimate = "CV", intercept = FALSE)
 # optimal number of PLS components based on the randomization test approach
 comp = selectNcomp(misclass)
 
+# % of explained variability
+summary(mvr(y~cbind(Z, Xr), ncomp = comp, method = "kernel"))
+
 
 # bootstrap
 kk = 1000
@@ -277,7 +280,10 @@ for (i in 2:lB){
   H[i,] = h
 }
 H = rbind(H, -H[1:lB,])
-H = 1*H # Scale loadings so that the arrows (points, respectively) are more visible in the biplot?
+
+# scaling constant
+scon = round(min(max(G[,1])/max(H[,1]), min(G[,1])/min(H[,1]), max(G[,2])/max(H[,2]), min(G[,2])/min(H[,2])), 1)
+H = scon*H
 
 colnames(G) = c("Comp1", "Comp2")
 colnames(H) = c("Comp1", "Comp2")
@@ -291,24 +297,27 @@ H$Adj = (1-1.125*sign(H$Comp1))/2
 
 pdf("PLSbiplot.pdf", height = 9, width = 9)
 g = ggplot(G, aes(x = Comp1, y = Comp2)) +
-  geom_point(aes(colour = Res), size = 2) +
+  geom_point(aes(colour = FM0), size = 2) +
   geom_segment(data = H, aes(x = 0, y = 0, xend = Comp1, yend = Comp2),
                arrow = arrow(length = unit(1/2, "picas")), 
                colour = c("darkblue","grey","darkred")[factor(signary)]) +
   geom_text(data = H, aes(label = Variable, x = Comp1, y = Comp2, angle = Angle, hjust = Adj), 
             size = 5, colour = c("darkblue","grey","darkred")[factor(signary)]) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  scale_color_gradient(name = "Response", low = "black", high = "gold") +
-  xlab("PLS comp. 1") + ylab("PLS comp. 2") +
+  scale_color_gradient(name = "ln(FM)", low = "black", high = "gold") +
+  scale_x_continuous("PLS comp. 1 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 1 (loadings)"),
+                     limits = c(2*min(H[,1]), 2*max(H[,1]))) +
+  scale_y_continuous("PLS comp. 2 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 2 (loadings)")) +
   theme(panel.background=element_blank(),
         axis.line = element_line(color="black"),
-        axis.text = element_blank(), 
-        axis.ticks=element_blank(),
-        axis.title = element_text(size = 15, vjust = 2, face = "bold"),
-        legend.position = c(0.95, 0.125),
+        axis.title.x.bottom = element_text(size = 15, face = "bold", margin = margin(t = 10)),
+        axis.title.y.left = element_text(size = 15, face = "bold", margin = margin(r = 10)),
+        axis.title.x.top = element_text(size = 15, face = "bold", margin = margin(b = 10)),
+        axis.title.y.right = element_text(size = 15, face = "bold", margin = margin(l = 10)),
+        legend.position = c(0.935, 0.125),
         legend.title = element_text(size = 15, face = "bold"), 
         legend.text = element_text(size = 13),
         legend.key = element_blank())
-g + coord_fixed(ratio = 1) # Change ratio between y-axis and x-axis scale?
+g
 dev.off()
