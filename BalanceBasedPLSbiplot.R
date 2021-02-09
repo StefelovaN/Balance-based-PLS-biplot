@@ -282,7 +282,7 @@ for (i in 2:lB){
 H = rbind(H, -H[1:lB,])
 
 # scaling constant
-scon = round(min(max(G[,1])/max(H[,1]), min(G[,1])/min(H[,1]), max(G[,2])/max(H[,2]), min(G[,2])/min(H[,2])), 1)
+scon = min(max(G[,1])/max(H[,1]), min(G[,1])/min(H[,1]), max(G[,2])/max(H[,2]), min(G[,2])/min(H[,2]))
 H = scon*H
 
 colnames(G) = c("Comp1", "Comp2")
