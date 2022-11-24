@@ -269,7 +269,6 @@ P$Variable = c(nB, pn)
 P$Angle = ((180/pi)*atan(P$Comp2/P$Comp1))
 P$hAdj = (1-1.1*sign(P$Comp1))/2
 
-
 pdf("PLSbiplot.pdf", height = 9, width = 9)
 g = ggplot(T, aes(x = Comp1, y = Comp2)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray70", size = 0.5) +
