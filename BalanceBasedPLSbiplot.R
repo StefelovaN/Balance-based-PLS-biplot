@@ -1,6 +1,6 @@
-#####################################################################################################################################
-### Construction of balance-based PLS biplot to to examine the association between 24-hour movement behaviours and health outcome ###
-#####################################################################################################################################
+##################################################################################################################################
+### Construction of balance-based PLS biplot to examine the association between 24-hour movement behaviours and health outcome ###
+##################################################################################################################################
 
 library(compositions)
 library(ggplot2)
@@ -32,21 +32,20 @@ Res = MBdata[, 8] # Choose the appropriate column.
 
 
 
-############
-# Balances #
-############
 
-BAL = list()
-CODES = list()
-VV = list()
+
+#####################################################
+# Matrices of logcontrast coefficients for balances #
+#####################################################
+
+GG = list()
 nB = character()
-nB2 = character()
 
 codes = matrix(0, D-1, D)
 for(i in 1:(D-1)){
   codes[i,] = c(rep(0,i-1),1,rep(-1,D-i))
 }   
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -54,19 +53,14 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[1]] = bal
-CODES[[1]] = codes
-VV[[1]] = V
+GG[[1]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
 codes = matrix(c(1,1,-1,-1,-1,
                  1,-1,0,0,0,
                  0,0,1,-1,-1,
                  0,0,0,1,-1), D-1, D, byrow=T)
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -74,19 +68,14 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[2]] = bal
-CODES[[2]] = codes
-VV[[2]] = V
+GG[[2]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
 codes = matrix(c(1,1,1,-1,-1,
                  1,-1,-1,0,0,
                  0,1,-1,0,0,
                  0,0,0,1,-1), D-1, D, byrow=T)
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -94,19 +83,14 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[3]] = bal
-CODES[[3]] = codes
-VV[[3]] = V
+GG[[3]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
 codes = matrix(c(1,1,1,1,-1,
                  1,-1,-1,-1,0,
                  0,1,-1,-1,0,
                  0,0,1,-1,0), D-1, D, byrow=T)
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -114,19 +98,14 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[4]] = bal
-CODES[[4]] = codes
-VV[[4]] = V
+GG[[4]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
 codes = matrix(c(1,-1,-1,-1,1,
                  1,0,0,0,-1,
                  0,1,-1,-1,0,
                  0,0,1,-1,0), D-1, D, byrow=T)
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -134,19 +113,14 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[5]] = bal
-CODES[[5]] = codes
-VV[[5]] = V
+GG[[5]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
 codes = matrix(c(1,-1,-1,1,1,
                  0,1,-1,0,0,
                  1,0,0,-1,-1,
                  0,0,0,1,-1), D-1, D, byrow=T)
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -154,19 +128,14 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[6]] = bal
-CODES[[6]] = codes
-VV[[6]] = V
+GG[[6]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
 codes = matrix(c(1,-1,1,1,1,
                  1,0,-1,-1,-1,
                  0,0,1,-1,-1,
                  0,0,0,1,-1), D-1, D, byrow=T)
-V = t(gsi.buildilrBase(t(codes)))
+G = t(gsi.buildilrBase(t(codes)))
 cnB = character()
 for (i in 1:(D-1)) {
   num = paste(cn[codes[i,]==1], collapse='.')
@@ -174,15 +143,19 @@ for (i in 1:(D-1)) {
   cnB[i] = paste(num, denum, sep='_')
   if (i==1) cnB2 = paste(denum, num, sep='_')
 }
-bal = log(as.matrix(MB))%*%t(V)
-colnames(bal) = cnB
-BAL[[7]] = bal
-CODES[[7]] = codes
-VV[[7]] = V
+GG[[7]] = G
 nB = c(nB, cnB[1])
-nB2 = c(nB2, cnB2)
 
-lB = length(BAL)
+lB = length(nB)
+
+
+
+H = matrix(0, lB, D)
+for (i in 1:lB) {
+  H[i, ] = GG[[i]][1, ]
+}
+
+
 
 
 
@@ -192,15 +165,14 @@ lB = length(BAL)
 
 #centering the variables
 y = as.vector(scale(Res, scale = F))
-X = as.data.frame(scale(acomp(MB), scale = F))
+X = as.matrix(as.data.frame(acomp(MB)-mean(acomp(MB))))
 Xr = as.matrix(scale(Real, scale = F))
 
-V = VV[[1]]
-Z = log(as.matrix(X))%*%t(V)
+C = clr(X)
 
 set.seed(1) # for reproducibility
 
-misclass = mvr(y~cbind(Z, Xr), ncomp = 5, method = "kernel", validation = "CV")
+misclass = mvr(y~cbind(C, Xr), ncomp = 5, validation = "CV")
 
 # CV RMSEP and R^2
 pls::RMSEP(misclass, estimate = "CV", intercept = FALSE)
@@ -210,9 +182,9 @@ pls::R2(misclass, estimate = "CV", intercept = FALSE)
 comp = selectNcomp(misclass)
 
 # % of explained variability
-summary(mvr(y~cbind(Z, Xr), ncomp = comp, method = "kernel"))
+summary(mvr(y~cbind(C, Xr), ncomp = comp))
 
-
+set.seed(11)
 # bootstrap
 kk = 1000
 BE = matrix(rep(NA, kk*(lB+p1)), ncol = (lB+p1))
@@ -222,38 +194,45 @@ for(k in 1:kk){
   testX1 = MB[ind, ]
   testX1r = Real[ind, ]
   testy = as.vector(scale(testy1, scale = F)) 
-  testX = as.data.frame(scale(acomp(testX1), scale = F))
+  testX = as.matrix(as.data.frame(acomp(testX1)-mean(acomp(testX1))))
   testXr = as.matrix(scale(testX1r, scale = F))
-  tbeta = rep(NA, lB+p1)
-  for (ll in 1:lB) {
-    selV = VV[[ll]]
-    testZ = log(as.matrix(testX))%*%t(selV)
-    resst = mvr(testy~cbind(testZ, testXr), ncomp = comp, method = "kernel")
-    tbst = as.vector(coef(resst))
-    tbeta[ll] = tbst[1]
-  }
-  tbeta[(lB+1):(lB+p1)] = tbst[D:(D-1+p1)]
+  testC = clr(testX)
+  resst = mvr(testy~cbind(testC, testXr), ncomp = comp)
+  tbeta0 = as.vector(coef(resst))
+  tbeta_clr = tbeta0[1:D]
+  tbeta_real = tbeta0[(D+1):(D+p1)]
+  tbeta_bal = H %*% tbeta_clr
+  tbeta = c(tbeta_bal, tbeta_real)
   BE[k,] = tbeta
 }
 
 # significance of bootstrap standardized regression coefficients
-beta = apply(BE, 2, mean)
-sdbeta = apply(BE, 2, sd)
-alpha1 = -qnorm(0.025)
-a0 = beta/sdbeta
-a = c(a0, -a0[1:lB])
-names(a) = c(nB, pn, nB2)
-stdRCo = (a[order(-abs(a))])
-stdRCo
-stdRCos = stdRCo[abs(stdRCo)>alpha1]
-stdRCos
+alpha0 = 0.05
 
-signary0 = rep(0, lB+p1)
+beta = colMeans(BE)
+names(beta) = c(nB, pn)
+sd = apply(BE, 2, sd)
+names(sd) = c(nB, pn)
+me = apply(BE, 2, function(x) mean(x/sd(x)))
+names(me) = c(nB, pn)
+lw = apply(BE, 2, function(x) quantile(x/sd(x), alpha0/2))
+names(lw) = c(nB, pn)
+up = apply(BE, 2, function(x) quantile(x/sd(x), 1-alpha0/2))
+names(up) = c(nB, pn)
+
+signary = rep(0, lB+p1)
+names(signary) = names(me)
 for(i in 1:(lB+p1)){
-  if((a[i]) > alpha1){signary0[i] = 1}
-  if((a[i]) < -alpha1){signary0[i] = -1}
+  if((lw[i] > 0) & (up[i] > 0)){signary[i] = 1}
+  if((lw[i] < 0) & (up[i] < 0)){signary[i] = -1}
 }
-signary = c(signary0, -signary0[1:lB])
+
+round(me, 2)
+round(lw, 2)
+round(up, 2)
+signary
+
+
 
 
 
@@ -261,53 +240,48 @@ signary = c(signary0, -signary0[1:lB])
 # PLS biplot #
 ##############
 
-selV = VV[[1]]
-Z = log(as.matrix(X))%*%t(selV)
-resst = mvr(y~cbind(Z, Xr), ncomp = comp, method = "kernel") 
+#centering the variables
+y = as.vector(scale(Res, scale = F))
+X = as.matrix(as.data.frame(acomp(MB)-mean(acomp(MB))))
+Xr = as.matrix(scale(Real, scale = F))
+
+C = clr(X)
+resst = mvr(y~cbind(C, Xr), ncomp = comp) 
 
 # scores and loadings
-G = matrix(as.numeric(resst$scores), n, comp)[, 1:2]
-H = matrix(0, lB+p1, 2)
-h = matrix(as.numeric(resst$loadings), D-1+p1, comp)[, 1:2]
-H[1,] = h[1,]
-H[(lB+1):(lB+p1), ] = h[D:(D-1+p1), ]
-
-for (i in 2:lB){
-  selV = VV[[i]]
-  Z = log(as.matrix(X))%*%t(selV)
-  resst = mvr(y~cbind(Z, Xr), ncomp = comp, method = "kernel") 
-  h = as.numeric(resst$loadings)[c(1, D+p1)]
-  H[i,] = h
-}
-H = rbind(H, -H[1:lB,])
+T = matrix(as.numeric(resst$scores), n, comp)[, 1:2]
+P0 = matrix(as.numeric(resst$loadings), D+p1, comp)[, 1:2]
+P_clr = P0[1:D, ]
+P_real = P0[(D+1):(D+p1), ]
+P_bal = H %*% P_clr
+P = rbind(P_bal, P_real)
 
 # scaling constant
-scon = min(max(G[,1])/max(H[,1]), min(G[,1])/min(H[,1]), max(G[,2])/max(H[,2]), min(G[,2])/min(H[,2]))
-H = scon*H
+scon = min(max(T[,1])/max(P[,1]), min(T[,1])/min(P[,1]), max(T[,2])/max(P[,2]), min(T[,2])/min(P[,2]))
+P = scon*P
 
-colnames(G) = c("Comp1", "Comp2")
-colnames(H) = c("Comp1", "Comp2")
+colnames(T) = c("Comp1", "Comp2")
+colnames(P) = c("Comp1", "Comp2")
 
-G = as.data.frame(G)
-H = as.data.frame(H)
-H$Variable = c(nB, pn, nB2)
-H$Angle = ((180/pi)*atan(H$Comp2/H$Comp1))
-H$Adj = (1-1.125*sign(H$Comp1))/2
+T = as.data.frame(T)
+P = as.data.frame(P)
+P$Variable = c(nB, pn)
+P$Angle = ((180/pi)*atan(P$Comp2/P$Comp1))
+P$hAdj = (1-1.1*sign(P$Comp1))/2
 
 
 pdf("PLSbiplot.pdf", height = 9, width = 9)
-g = ggplot(G, aes(x = Comp1, y = Comp2)) +
+g = ggplot(T, aes(x = Comp1, y = Comp2)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray70", size = 0.5) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray70") +
   geom_point(aes(colour = Res), size = 2) +
-  geom_segment(data = H, aes(x = 0, y = 0, xend = Comp1, yend = Comp2),
-               arrow = arrow(length = unit(1/2, "picas")), 
-               colour = c("darkblue","grey","darkred")[factor(signary)]) +
-  geom_text(data = H, aes(label = Variable, x = Comp1, y = Comp2, angle = Angle, hjust = Adj), 
-            size = 5, colour = c("darkblue","grey","darkred")[factor(signary)]) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", size = 0.5) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  scale_color_gradient(name = "ln(FM)", low = "black", high = "gold") +
-  scale_x_continuous("PLS comp. 1 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 1 (loadings)"),
-                     limits = c(2*min(H[,1]), 2*max(H[,1]))) +
+  geom_segment(data = P, aes(x = 0, y = 0, xend = Comp1, yend = Comp2),
+               arrow = arrow(length = unit(1, "picas")), 
+               colour = "grey15", size = 1) +
+  geom_text(data = P, aes(label = Variable, x = Comp1, y = Comp2, angle = Angle, hjust = hAdj), 
+            size = 5, colour = c("darkblue","grey40","darkred")[factor(signary)], fontface = "bold") +
+  scale_color_gradient(name = "Name", low = "grey10", high = "yellow") +
+  scale_x_continuous("PLS comp. 1 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 1 (loadings)")) +
   scale_y_continuous("PLS comp. 2 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 2 (loadings)")) +
   theme(panel.background=element_blank(),
         axis.line = element_line(color="black"),
